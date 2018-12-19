@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>顾问信息操作</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit">
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-responsive.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet"/>
+    <link href="css/lib/font-awesome.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/layout.css"/>
+    <link rel="stylesheet" href="css/compiled/common.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/navigation.css">
+    <style>
+        .modal-body .form-group input, textarea {
+            width: 250px;
+        }
+        .modal-body input[type="checkbox"] {
+            width: 20px;
+            margin-right: 6px;
+            height: 20px;
+            vertical-align: -42%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="header">
+    <!--插入导航-->
+</div>
+
+<div id="sideLeft">
+    <!--左边栏菜单-->
+</div>
+
+
+<!-- main container -->
+<div class="content">
+
+    <div class="title clearfix">
+        <span>顾问信息列表</span>
+        <button class="btn btn-info pull-right" id="export" style="margin-top:50px;margin-right: 5%">导出文件</button>
+        <button class="btn btn-primary pull-right" id="chooseAll" style="margin-top:50px;margin-right:20px">全选当前页</button>
+        <div class="search">
+            <input type="text" class="search-input" placeholder="请输入顾问名字查询" onkeyup="if (event.keyCode == 13) { searchMsg(); return false; }">
+            <i class="icon-search search-icon" onclick="searchMsg()"></i>
+        </div>
+    </div>
+
+    <div class="list">
+
+    </div>
+    <div id="navigation">
+
+    </div>
+</div>
+<div class="modal fade" id="changeMess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     style="display: none;margin-bottom: 40px;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="companyInfoClose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">顾问信息修改</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group" style="display: none;">
+                        <label for="Id" class="col-sm-3 control-label">Id：</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="Id" id="Id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3 control-label">顾问姓名：</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="name" id="name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location" class="col-sm-3 control-label">位置：</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="location" id="location">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="col-sm-3 control-label">联系方式：</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="phone" id="phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="longitude" class="col-sm-3 control-label">经度：</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="longitude" id="longitude">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="latitude" class="col-sm-3 control-label">纬度：</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="latitude" id="latitude">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-sm-3 control-label">顾问描述：</label>
+                        <div class="col-sm-9">
+                            <textarea  id="description"  rows="10" ></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="business_confirm" class="col-sm-3 control-label">请选择是否工商认证：</label>
+                        <div class="col-sm-9">
+                            <input type="checkbox" class="business" name="business_confirm1" value="1">已认证
+                            <input type="checkbox" class="business" name="business_confirm2" value="2" style="margin-left: 20%">未认证
+                            <!--<input type="radio" name="business_confirm" value="1" style="width: 30px;vertical-align: top;">已认证-->
+                            <!--<input type="radio" name="business_confirm" value="2"  style="width: 30px;vertical-align: top;margin-left: 20px;">未认证-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="location_confirm" class="col-sm-3 control-label">请选择是否位置认证：</label>
+                        <div class="col-sm-9">
+                            <!--<input type="radio" name="location_confirm" value="1" style="width: 30px;vertical-align: top;">已认证-->
+                            <!--<input type="radio" name="location_confirm" value="2"  style="width: 30px;vertical-align: top;margin-left: 20px;">未认证-->
+                            <input type="checkbox" class="location" name="location_confirm1" value="1">已认证
+                            <input type="checkbox" class="location" name="location_confirm2" value="2" style="margin-left: 20%">未认证
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="type" class="col-sm-3 control-label">请选择顾问类型：</label>
+                        <div class="col-sm-9">
+                            <!--<input type="radio" name="type" value="d" style="width: 30px;vertical-align: top;">设计顾问-->
+                            <!--<input type="radio" name="type" value="t" style="width: 30px;vertical-align: top;margin-left: 20px;">技术顾问-->
+                            <input type="checkbox" class="type" name="type" value="d">设计顾问
+                            <input type="checkbox" class="type" name="type" value="t" style="margin-left: 18%">技术顾问
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="key_word" class="col-sm-3 control-label">请输入搜索关键字：</label>
+                        <div class="col-sm-9">
+                            <textarea  id="key_word"  rows="4" ></textarea>
+                        </div>
+                    </div>
+                </form>
+                <div class="footbtn">
+                    <button id="addbtn" onclick="modifyInfo()">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- scripts -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/notie.js"></script>
+<script src="js/handlebars.min.js"></script>
+<script src="js/navigation.js"></script>
+
+<script type="text/x-handlebars-template" id="table-template">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>选择导出的顾问</th>
+            <th>顾问名姓名</th>
+            <th>位置</th>
+            <th>联系方式</th>
+            <th>描述</th>
+            <th>经度</th>
+            <th>纬度</th>
+            <th>工商认证</th>
+            <th>位置认证</th>
+            <th>搜索关键字</th>
+            <th>顾问类型</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="tablelist">
+        {{#each this}}
+        <tr>
+            <td>{{id}}</td>
+            <td><input type="checkbox" name="adviser_id" value="{{id}}"></td>
+            <td>{{name}}</td>
+            <td>{{location}}</td>
+            <td>
+                {{phone}}
+            </td>
+            <td>
+                {{description}}
+            </td>
+            <td>
+                {{longitude}}
+            </td>
+            <td>
+                {{latitude}}
+            </td>
+
+            <td>
+                {{confirmFilter businessConfirm}}
+            </td>
+            <td>
+                {{confirmFilter locationConfirm}}
+            </td>
+            <td>
+                {{keyWord}}
+            </td>
+            <td>
+                {{typeFilter type}}
+            </td>
+            <td>
+                <button class="btn btn-default" data-toggle="modal" data-target="#changeMess" onclick="modifyMsg('{{id}}','{{stringFilter name}}','{{stringFilter location}}','{{stringFilter phone}}','{{stringFilter description}}','{{stringFilter latitude}}','{{stringFilter longitude}}','{{locationConfirm}}','{{businessConfirm}}','{{stringFilter keyWord}}','{{type}}')">修改
+                </button>
+                <button class="btn btn-danger" onclick="deleteSug({{id}})">删除</button>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/javascript">
+    // 复选框只能选中一项
+    checkBoxOne(".business");
+    checkBoxOne(".location");
+    checkBoxOne(".type");
+
+
+    // 定义选中的列表
+    var chooseArr = [];
+    // 当前显示页
+    var now = 1;
+
+    window.onload = function () {
+
+        $("#header").load('header.html');
+
+        $("#sideLeft").load('side.html');
+
+        getData(now);
+
+        $("#chooseAll").click(function () {
+            $.each($("input[name='adviser_id']"), function (item) {
+                $(this).prop("checked","checked");
+            });
+        });
+
+        $("#export").click(function () {
+            getCheckArr();
+            var data = {
+                adviser_id: chooseArr.join(',')
+            };
+            design.post('/Admin/exportAdviser', data, function (res) {
+                notie.alert(1, res.message, 4.5);
+                window.open(design.base_url+"/Admin/downloadAdviserExcel");
+            }, function (err) {
+                notie.alert(3, err.message, 2.5);
+            });
+        });
+
+
+    };
+
+
+    // 选中的数组更新到视图
+    function getViewCheck() {
+        $.each($("input[name='adviser_id']"), function (item) {
+            if ($.inArray($(this).val(),chooseArr) != -1) {
+                $(this).prop("checked","checked");
+            }
+        });
+    }
+    // 视图更新到数组
+    function getCheckArr() {
+        $.each($("input[name='adviser_id']"), function (item) {
+            var val = $(this).val();
+            if ($(this).prop("checked")) {
+                if ($.inArray(val,chooseArr) == -1) {
+                    chooseArr.push(val);
+                }
+            } else {
+                if ($.inArray(val,chooseArr) != -1) {
+                    deleteArrayValue(chooseArr,val);
+                }
+            }
+        });
+    }
+    // 删除指定数组的元素
+    function deleteArrayValue(arr,key) {
+        arr.splice($.inArray(key,arr),1);
+    }
+
+
+    function getData(page) {
+        getCheckArr();
+        now = page;
+        var limit = 10;
+        var data = {
+            pageNo: page,
+            pageSize: limit
+        };
+        design.post('/VIP/Adviser/showAllAdviser', data, function (res) {
+
+
+            var total_page = Math.ceil(res.data / limit);
+
+
+            Handlebars.registerHelper("confirmFilter", function (value, options) {
+                if (value == 1) {
+                    return  "已认证"
+                }
+                return "未认证";
+            });
+
+            Handlebars.registerHelper("typeFilter", function (value, options) {
+                if (value == 'd') {
+                    return  "设计顾问"
+                }
+                return "技术顾问";
+            });
+            Handlebars.registerHelper("stringFilter", function (value, options) {
+                if (!value) {
+                    return encodeURI(value);
+                }
+                var value = value.replace(/\"/g,'\\"').replace(/\'/g,"\\'");
+                return encodeURI(value);
+            });
+
+            var tableTpl = Handlebars.compile($("#table-template").html());
+
+
+
+            $(".list").html(tableTpl(res.dataList));
+
+            makeNavigation(page, total_page, 'getData', "navigation", 2);
+
+            getViewCheck();
+
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+        });
+    }
+
+    function modifyMsg(id, name, location, phone, description, latitude, longitude, locationConfirm, businessConfirm, keyWord, type) {
+
+        name = decodeURI(name);
+        location = decodeURI(location);
+        phone = decodeURI(phone);
+        description = decodeURI(description);
+        latitude = decodeURI(latitude);
+        longitude = decodeURI(longitude);
+        keyWord = decodeURI(keyWord);
+
+
+        $("#Id").val(id);
+        $("#name").val(name);
+        $("#location").val(location);
+        $("#phone").val(phone);
+        $("#description").val(description);
+        $("#latitude").val(latitude);
+        $("#longitude").val(longitude);
+        $.each($(".location"), function (item) {
+            if ($(this).val() == locationConfirm) {
+                $(this).prop('checked', "checked");
+            } else {
+                $(this).prop('checked', false);
+            }
+        });
+        $.each($(".business"), function (item) {
+            if ($(this).val() == businessConfirm) {
+                $(this).prop('checked', "checked");
+            } else {
+                $(this).prop('checked', false);
+            }
+        });
+        $.each($(".type"), function (item) {
+            if ($(this).val() == type) {
+                $(this).prop('checked', "checked");
+            } else {
+                $(this).prop('checked', false);
+            }
+        });
+        $("#key_word").val(keyWord);
+    }
+
+    function modifyInfo() {
+        var data = {
+            id: $("#Id").val(),
+            name: $("#name").val(),
+            location: $("#location").val(),
+            phone: $("#phone").val(),
+            description: $("#description").val(),
+            latitude: $("#latitude").val(),
+            longitude: $("#longitude").val(),
+            business_confirm: $(".business:checked").val(),
+            location_confirm: $(".location:checked").val(),
+            type: $(".type:checked").val(),
+            key_word: $("#key_word").val()
+        };
+        design.post("/Admin/modifyAdviser", data, function (res) {
+            notie.alert(1, res.message, 1.5);
+            $("#companyInfoClose").trigger("click");
+            getData(now);
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+        });
+
+    }
+
+    function deleteSug(id){
+        var data = {
+            id: id
+        };
+        notie.confirm('你确定删除该顾问吗?', '确认', '取消', function() {
+            design.post("/Admin/removeAdviser", data, function(res) {
+                notie.alert(1, '删除成功！', 2);
+                if ($("#tablelist tr").length <= 1) {
+                    if (now > 1) {
+                        getData(now-1);
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    getData(now);
+                }
+            }, function(res) {
+                notie.alert(3, err.message, 2.5);
+            });
+        });
+    }
+
+    // 查找
+    function searchMsg() {
+        $(".list").html("");
+        var name = $(".search-input").val();
+
+        var data = {
+            name: name
+        };
+
+        design.post('/Admin/searchAdviser', data, function (res) {
+            $("#navigation").html("");
+            notie.alert(1, res.message, 2.5);
+            var tableTpl = Handlebars.compile($("#table-template").html());
+            $(".list").html(tableTpl(res.dataList));
+
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+            $(".list").html("未查询到");
+        });
+
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>添加顾问信息</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1"/>
+    <meta name="renderer" content="webkit">
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet"/>
+    <link href="css/lib/font-awesome.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/layout.css"/>
+    <link rel="stylesheet" href="css/compiled/common.css" type="text/css"/>
+    <link rel="stylesheet" href="css/form.css">
+</head>
+<body>
+
+<div id="header">
+    <!--插入导航-->
+</div>
+<div id="sideLeft">
+    <!--左边栏菜单-->
+
+</div>
+
+
+<!-- main container -->
+<div class="content">
+    <div class="title">
+        <span>联系我们（全为必填数据）</span>
+    </div>
+    <div class="one-level addBox">
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <label for="phone" class="col-sm-3 control-label">请输入咨询热线：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="phone" id="phone" placeholder="请输入咨询热线号码">
+                </div>
+            </div>
+        </form>
+        <button id="submitPhone" type="button">立即提交</button>
+    </div>
+
+    <div class="title">
+        <span>关于（全为必填数据）</span>
+    </div>
+    <div class="one-level addBox">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="slogan" class="col-sm-3 control-label">请输入口号：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="slogan" id="slogan" placeholder="请输入口号">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="target" class="col-sm-3 control-label">请输入目标：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="target" id="target" placeholder="请输入目标">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="brief" class="col-sm-3 control-label">请输入简介：</label>
+                <div class="col-sm-9">
+                    <textarea id="brief" rows="10" style="width:400px" name="brief"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="member" class="col-sm-3 control-label">请输入团队成员：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="member" id="member" placeholder="请输入团队成员,用，或者-分隔">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="guidance" class="col-sm-3 control-label">请输入指导单位：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="guidance" id="guidance" placeholder="请输入指导单位,用，或者-分隔">
+                </div>
+            </div>
+        </form>
+        <button id="submitForm" type="button">立即提交</button>
+    </div>
+
+</div>
+
+
+<!-- scripts -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/notie.js"></script>
+<script src="js/handlebars.min.js"></script>
+<script>
+
+    $(function () {
+        $("#header").load('header.html');
+
+        $("#sideLeft").load('side.html');
+
+
+        $("#submitPhone").on("click", function () {
+            if (!$("#phone").val()) {
+                notie.alert(3, '请填写完整数据！', 2.5);
+                return false;
+            }
+
+            var data = {
+                phone: $("#phone").val()
+            };
+
+            design.post('/Admin/modifyContact', data, function () {
+                notie.alert(1, '提交成功！', 2);
+            }, function (err) {
+                notie.alert(3, err.message, 2.5);
+            });
+        });
+
+        $("#submitForm").on("click", function () {
+            var data = {
+                brief: $("#brief").val(),
+                slogan: $("#slogan").val(),
+                target: $("#target").val(),
+                member: $("#member").val(),
+                guidance: $("#guidance").val()
+            };
+            design.post('/Admin/modifyAbout', data, function () {
+                notie.alert(1, '提交成功！', 2);
+            }, function (err) {
+                notie.alert(3, err.message, 2.5);
+            });
+        })
+    });
+</script>
+<script type="text/javascript">
+    window.onload = function () {
+//        getData();
+    };
+
+    function getData() {
+        design.post('/Admin/getAboutInfo',"",function (res) {
+            var aboutInfo = res.data;
+            $('#phone').val(aboutInfo.phone);
+            $('#slogan').val(aboutInfo.slogan);
+            $('#target').val(aboutInfo.target);
+            $('#brief').val(aboutInfo.brief);
+            $('#member').val(aboutInfo.member);
+            $('#guidance').val(aboutInfo.guidance);
+        },function (err) {
+            notie.alert(3, err.message, 2.5);
+        })
+    }
+</script>
+</body>
+</html>

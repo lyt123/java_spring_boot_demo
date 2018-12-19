@@ -1,0 +1,153 @@
+.content {
+    background-color: #fff;
+}
+.addBox {
+    width: 80%;
+    margin: 50px auto;
+}
+.addBox .form-group input[type='radio']{vertical-align:text-bottom;margin-bottom:-1px;*margin-bottom:-4px;width:40px !important;height:20px !important;
+    margin-top:8px;}
+.col-sm-5{
+    width:60px;
+    float:left;
+    margin-left: 20px;
+}
+.addBox p {
+    font-size: 20px;
+    font-family: "微软雅黑";
+}
+.addBox form {
+    margin: 20px auto;
+    width: 80%;
+}
+.addBox .form-group {
+    margin-top: 20px;
+    clear: both;
+}
+.addBox .form-group input{
+    width: 400px;
+    height: 30px;
+}
+.addBox .form-group select{
+    width: 414px;
+    height: 40px;
+}
+.form-sex{
+    margin-top: 20px;
+    clear: both;
+    line-height:25px;
+
+}
+#submitForm, #submitPhone {
+    background-color: #20a0ff;
+    border-color: #20a0ff;
+    width: 300px;
+    height: 33px;
+    border-radius: 5px;
+    color:#fff;
+    margin:auto;
+    display: block;
+}
+#submitForm:focus, #submitForm:hover,#submitPhone:focus, #submitPhone:hover {
+    background: #4db3ff;
+    border-color: #4db3ff;
+    color: #fff;
+}
+.listTitle {
+    font-size: 15px;
+    margin-left: 45px;
+}
+.list {
+    list-style: none;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.list li {
+    display: inline-block;
+    float: left;
+    margin: 10px 20px;
+}
+.addBox .form-group label {
+    line-height: 30px;
+}
+#preview, .img, img {
+    width: 412px;
+}
+#pic-file {
+    float:right;
+    width: 180px;
+    margin-top: 20px;
+}
+#preview {
+    border: 1px solid #ccc;
+}
+.spinner {
+    margin: 100px auto 0px;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+}
+.warning {
+    color:red;
+}
+.spinner > div {
+    background-color: #67CF22;
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+}
+
+@-webkit-keyframes stretchdelay {
+    0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+    20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes stretchdelay {
+    0%, 40%, 100% {
+        transform: scaleY(0.4);
+        -webkit-transform: scaleY(0.4);
+    }  20% {
+           transform: scaleY(1.0);
+           -webkit-transform: scaleY(1.0);
+       }
+}
+.fix-load {
+    position: fixed;
+    top:200px;
+    left:50%;
+}
+.addBox input[type="checkbox"] {
+    width: 20px;
+    vertical-align: -60%;
+    margin-right: 6px;
+}
+.modal-body input[type="checkbox"] {
+    width: 20px;
+    margin-right: 6px;
+    height: 20px;
+    vertical-align: -42%;
+}

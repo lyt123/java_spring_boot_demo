@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>设计人才</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="user-scalable=0, width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+        * {
+            word-wrap:break-word ;
+            word-break:break-all;
+        }
+        html,body {
+            height: 100%;
+        }
+        body{
+            padding: 0px;
+            margin: 0px;
+            background: rgba(236,240,243,0.6);
+        }
+        .container {
+            width: 100%;
+            min-height: 90%;
+            font-weight: 500;
+        }
+        .header-info {
+            margin-top: 10px;
+            padding: 13px 0px;
+        }
+        .boder-rad {
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #D4D6D5;
+            border-left:0px;
+            border-right:0px;
+            border-right:0px;
+        }
+        .img-rad {
+            border-radius: 50%;
+        }
+        .header-img,.name-sex{
+            display: inline-block;
+            vertical-align: top;
+        }
+        .header-img {
+            margin-left: 22px;
+        }
+        .name-sex {
+            margin-left: 21px;
+        }
+        .name {
+            margin-bottom: 30px;
+        }
+        .base-title,.description{
+            margin-top: 11px;
+        }
+        .base-h {
+            font-size: 13px;
+            color: #838987;
+            margin-left:21px;
+        }
+        .common-pd {
+            padding: 14px 15px 13px 15px;
+            font-size: 15px;
+        }
+        .base-info-title {
+            width: 30%;
+            display: inline-block;
+        }
+        .base-info-con {
+            width: 60%;
+            display: inline-block;
+            vertical-align: top;
+            word-wrap:break-word ;
+            word-break:break-all;
+        }
+        .mt {
+            margin-top: 20px;
+        }
+        .des-content {
+            min-height: 116px;
+        }
+        .footer {
+            padding-bottom:20px;
+            font-size: 25px;
+            font-weight: 300;
+            width: 60%;
+            text-align: center;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-info boder-rad">
+        <div class="header-img">
+            <img width="72" height="72" class="img-rad user-header">
+        </div>
+        <div class="name-sex">
+            <div class="name"></div>
+            <div class="sex"></div>
+        </div>
+    </div>
+    <div class="base-title">
+        <span class="base-h">基本信息</span>
+        <div class="base-info boder-rad common-pd">
+            <div class="phone">
+                <span class="base-info-title">联系方式</span>
+                <span class="base-info-con"></span>
+            </div>
+            <div class="education mt">
+                <span class="base-info-title">教育经历</span>
+                <span class="base-info-con"></span>
+            </div>
+            <div class="skill mt">
+                <span class="base-info-title">技能</span>
+                <span class="base-info-con"></span>
+            </div>
+        </div>
+    </div>
+    <div class="description">
+        <span class="base-h">描述</span>
+        <div class="des-content boder-rad common-pd"></div>
+    </div>
+</div>
+<div class="footer">
+    <img src="img/logo.jpg" alt="" width="25" height="25" style="vertical-align: middle"> | 设计联盟
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/notie.js"></script>
+<script>
+    $(function () {
+        var urlParam =  window.location.search.substring(1).split('&');
+        var paramObj = {};
+        $.each(urlParam, function (index, item) {
+            var value = item.split('=');
+            paramObj[value[0]] = value[1];
+        });
+        var data = {
+            person_id: paramObj.id
+        };
+        design.post('/Home/DesignPerson/getDesignPerson', data, function (res) {
+            var data = res.data;
+
+            $(".name").text(data.name);
+            $(".user-header").attr('src', design.base_url+"/DesignPerson/"+data.avatar);
+            var sex = '女';
+            if (data.sex != 'f') {
+                sex = '男'
+            }
+            $(".sex").text(sex);
+
+            $(".phone .base-info-con").text(data.phone);
+            $(".education .base-info-con").text(data.education);
+            $(".skill .base-info-con").text(data.skill);
+
+            $(".des-content").text(data.description);
+
+        }, function (err) {
+            notie.alert(3, err.message, 4.5);
+        });
+    });
+</script>
+</body>
+</html>

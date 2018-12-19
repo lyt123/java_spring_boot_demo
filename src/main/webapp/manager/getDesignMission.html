@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>设计任务</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="user-scalable=0, width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+        * {
+            word-wrap:break-word ;
+            word-break:break-all;
+        }
+        html,body {
+            height: 100%;
+        }
+        body{
+            padding: 0px;
+            margin: 0px;
+            background: rgba(236,240,243,0.3);
+        }
+        .container {
+            width: 100%;
+            min-height: 86%;
+        }
+        .title,.task-detail {
+            width: 94%;
+            margin: 20px auto;
+        }
+        .title-header {
+            width: 100%;
+            background: #CACACA;
+            height: 40px;
+            font-size: 16px;
+            line-height: 40px;
+            border-radius: 10px 10px 0px 0px;
+        }
+        .contetnt {
+            display: inline-block;
+        }
+        .contetnt-left {
+            padding-left: 20px;
+            width: 46%;
+        }
+        .title-content,.detail-content {
+            padding: 26px 0px;
+            border: 2px solid #C8CCCB;
+            border-top: 0px;
+            border-radius: 0px 0px 10px 10px;
+            background: #fff;
+        }
+        .content-title {
+            padding-left: 20px;
+            font-size: 20px;
+            font-weight:500;
+            width: 46%;
+            vertical-align: middle;
+            padding-right: 4px;
+        }
+        .content-time {
+            font-size: 15px;
+            vertical-align: middle;
+            width: 44%;
+        }
+        .detail-content {
+            padding: 20px;
+            padding-bottom: 10px;
+        }
+        .details {
+            font-size: 15px;
+            color: #818181;
+            min-height: 127px;
+            padding-bottom: 20px;
+            line-height: 1.4em;
+        }
+        .line {
+            height: 3px;
+            width: 100%;
+            background-color: #8F8F8F;
+            margin-bottom: 5px;
+        }
+        .user img {
+            width: 60px;
+            height: 48px;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .user-info {
+            font-size: 13px;
+            color: #7B7B7B;
+            padding-left: 16px;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .user-name {
+            padding-top: 5px;
+            margin-bottom: 14px;
+        }
+        .footer {
+            padding-bottom: 20px;
+            font-size: 25px;
+            font-weight: 300;
+            width: 60%;
+            text-align: center;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="title">
+        <div class="title-header">
+            <div class="contetnt contetnt-left">
+                <span>任务标题</span>
+            </div>
+            <div class="contetnt header-contetnt-right">
+                <span>浏览次数: </span> <span class="see-count"></span>
+            </div>
+        </div>
+        <div class="title-content">
+            <div class="contetnt content-title">
+                <span></span>
+            </div>
+            <div class="contetnt content-time">
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <div class="task-detail">
+        <div class="title-header">
+            <div class="contetnt contetnt-left">
+                <span>任务详情</span>
+            </div>
+        </div>
+        <div class="detail-content">
+            <div class="details"></div>
+            <div class="line"></div>
+            <div class="user">
+                <img class="user-header">
+                <div class="user-info">
+                    <div class="user-name">发布者: <span></span></div>
+                    <div class="user-phone">联系方式: <span></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <img src="img/logo.jpg" alt="" width="25" height="25" style="vertical-align: middle"> | 设计联盟
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/notie.js"></script>
+<script>
+    $(function () {
+        var urlParam =  window.location.search.substring(1).split('&');
+        var paramObj = {};
+        $.each(urlParam, function (index, item) {
+            var value = item.split('=');
+            paramObj[value[0]] = value[1];
+        });
+        var data = {
+            mission_id: paramObj.id
+        };
+        design.post('/Home/DesignMission/getDesignMission', data, function (res) {
+
+            var data = res.data;
+            $(".see-count").text(data.count);
+            $(".content-title").text(data.title);
+
+            var time = new Date(data.time);
+            var rightTime = formatDate(time, "yyyy-MM-dd hh:mm:ss");
+            $(".content-time span").text(rightTime);
+
+            $(".details").text(data.details);
+            $(".user-header").attr('src', design.base_url+"/DesignMission/"+data.cover);
+            $(".user-name").text(data.issuer);
+            $(".user-phone").text(data.contact);
+
+        }, function (err) {
+            notie.alert(3, err.message, 4.5);
+        });
+    });
+</script>
+</body>
+</html>

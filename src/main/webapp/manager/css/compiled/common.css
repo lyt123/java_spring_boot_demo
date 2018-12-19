@@ -1,0 +1,80 @@
+.content {
+  background-color: #fff;
+}
+.content .title span {
+	display: inline-block;
+	margin-left: 5%;
+	margin-top: 50px;
+	font-size: 25px;
+	font-family: "微软雅黑";
+}
+#addstaff {
+	background-color: #96BF48;
+	border:none;
+	color: #fff;
+	float: right;
+	margin-right: 10%;
+	margin-top: 50px;
+	width: 107px;
+	height: 33px;
+	border-radius: 5px;
+}
+.list {
+	width: 90%;
+	margin:20px auto;
+}
+.list table td,.list table th {
+	text-align: center;
+	vertical-align: middle;
+	padding-bottom:10px;
+}
+.list table td button {
+	margin:0 10px;
+	margin-bottom: 10px;
+	background-color: #fff;
+	border:1px solid #ccc;
+	border-radius: 5px;
+	padding: 7px 10px;
+}
+.form-group {
+	margin-top: 20px;
+}
+.footbtn {
+	text-align: center;
+}
+.footbtn button {
+	width: 200px;
+	height: 35px;
+	border:none;
+	border-radius: 5px;
+	color: #fff;
+}
+#addbtn {
+	background-color: #20a0ff;
+}
+#updatebtn {
+	background-color: #D44B47;
+}
+.search {
+	float: right;
+	margin-top: 40px;
+	margin-right: 5%;
+	position: relative;
+}
+input[type="text"].search-input {
+	width: 300px;
+	padding-right: 30px;
+	margin-top: 10px;
+}
+.search-icon {
+	position: absolute;
+	right: 6px;
+	font-size: 18px;
+	top: 16px;
+	cursor: pointer;
+	height: 28px;
+}
+input[type="checkbox"]:focus,
+input[type="checkbox"]:hover {
+	outline: none;
+}

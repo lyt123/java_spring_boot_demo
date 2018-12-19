@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>录入公司信息</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit">
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet"/>
+    <link href="css/lib/font-awesome.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/layout.css"/>
+    <link rel="stylesheet" href="css/compiled/common.css" type="text/css"/>
+    <link rel="stylesheet" href="css/form.css">
+</head>
+<body>
+
+<div id="header">
+    <!--插入导航-->
+</div>
+<div id="sideLeft">
+    <!--左边栏菜单-->
+
+</div>
+
+
+<!-- main container -->
+<div class="content">
+
+    <div class="title">
+        <span>录入公司信息（全为必填数据）</span>
+    </div>
+
+    <div class="one-level addBox">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="name" class="col-sm-3 control-label">请输入公司名称：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="name" id="name" placeholder="请输入公司名称">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="location" class="col-sm-3 control-label">请输入公司地址：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="location" id="location" placeholder="请输入公司地址">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="manager" class="col-sm-3 control-label">请输入公司HR：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="manager" id="manager" placeholder="请输入公司HR">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="col-sm-3 control-label">HR电话或公司电话：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="phone" id="phone" placeholder="请输入HR电话或公司电话">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="longitude" class="col-sm-3 control-label">请输入公司经度：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="longitude" id="longitude" placeholder="请输入公司经度">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="latitude" class="col-sm-3 control-label">请输入公司纬度：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="latitude" id="latitude" placeholder="请输入公司纬度">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="col-sm-3 control-label">请输入公司描述：</label>
+                <div class="col-sm-9">
+                    <textarea  id="description"  rows="10" style="width:400px"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="business_confirm" class="col-sm-3 control-label">请选择是否工商认证：</label>
+                <div class="col-sm-9">
+                    <input type="checkbox" class="business" name="business_confirm1" value="1">已认证
+                    <input type="checkbox" class="business" name="business_confirm2" value="2" style="margin-left: 20%">未认证
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="location_confirm" class="col-sm-3 control-label">请选择是否位置认证：</label>
+                <div class="col-sm-9">
+                    <input type="checkbox" class="location" name="location_confirm1" value="1">已认证
+                    <input type="checkbox" class="location" name="location_confirm2" value="2" style="margin-left: 20%">未认证
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="key_word" class="col-sm-3 control-label">请输入搜索关键字：</label>
+                <div class="col-sm-9">
+                    <textarea  id="key_word"  rows="4" style="width:400px"></textarea>
+                </div>
+            </div>
+        </form>
+        <button id="submitForm">立即提交</button>
+    </div>
+</div>
+
+
+<!-- scripts -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/notie.js"></script>
+<script src="js/handlebars.min.js"></script>
+<script>
+    $(function () {
+        $("#header").load('header.html');
+
+        $("#sideLeft").load('side.html');
+
+        $(".business").on("click", function () {
+            $(this).siblings("input").prop("checked",false);
+        });
+        $(".location").on("click", function () {
+            $(this).siblings("input").prop("checked",false);
+        });
+
+        $("#submitForm").click(function () {
+
+            var data = {
+                name: $("#name").val(),
+                location: $("#location").val(),
+                manager: $("#manager").val(),
+                phone: $("#phone").val(),
+                description: $("#description").val(),
+                latitude: $("#latitude").val(),
+                longitude: $("#longitude").val(),
+                business_confirm: $(".business:checked").val(),
+                location_confirm: $(".location:checked").val(),
+                key_word: $("#key_word").val()
+            };
+            var flag = false;
+            $.each(data, function(index,item) {
+               if (!item) {
+                   notie.alert(3, "数据请填写完整", 2.5);
+                   flag = true;
+               }
+            });
+            if (flag) {
+                return false;
+            }
+            design.post("/Admin/saveCompany", data, function (res) {
+                notie.alert(1, res.message, 2.5);
+            }, function (err) {
+                notie.alert(3, err.message, 2.5);
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>意见反馈管理</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit">
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-responsive.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet"/>
+    <link href="css/lib/font-awesome.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/layout.css"/>
+    <link rel="stylesheet" href="css/compiled/common.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+
+<div id="header">
+    <!--插入导航-->
+</div>
+
+<div id="sideLeft">
+    <!--左边栏菜单-->
+</div>
+
+
+<!-- main container -->
+<div class="content">
+
+    <div class="title">
+        <span>意见反馈列表</span>
+        <div class="search">
+            <input type="text" class="search-input" placeholder="请输入邮箱账号查询" onkeyup="if (event.keyCode == 13) { searchMsg(); return false; }">
+            <i class="icon-search search-icon" onclick="searchMsg()"></i>
+        </div>
+    </div>
+
+    <div class="list">
+
+    </div>
+    <div id="navigation">
+
+    </div>
+</div>
+<!-- scripts -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/notie.js"></script>
+<script src="js/handlebars.min.js"></script>
+<script src="js/navigation.js"></script>
+
+<script type="text/x-handlebars-template" id="table-template">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>邮箱</th>
+            <th>时间</th>
+            <th>内容</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="tablelist">
+        {{#each this}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{mail}}</td>
+            <td>{{timeFilter time}}</td>
+            <td>
+                {{content}}
+            </td>
+            <td>
+                <button class="btn btn-danger" onclick="deleteSug({{id}})">删除</button>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/javascript">
+    var now = 1;
+    window.onload = function () {
+
+        $("#header").load('header.html');
+
+        $("#sideLeft").load('side.html');
+
+        getData(now);
+
+    };
+
+    function getData(page) {
+        now = page;
+        var limit = 10;
+        var data = {
+            pageNo: page,
+            pageSize: limit
+        };
+        design.post('/Admin/showSuggestion', data, function (res) {
+
+
+            var total_page = Math.ceil(res.data / limit);
+
+            design.log(res.data);
+
+            Handlebars.registerHelper("timeFilter", function (value, options) {
+                var time = new Date(value);
+                return formatDate(time, "yyyy-MM-dd hh:mm:ss");
+            });
+
+            var tableTpl = Handlebars.compile($("#table-template").html());
+
+
+            design.log(res.dataList);
+
+            $(".list").html(tableTpl(res.dataList));
+
+            makeNavigation(page, total_page, 'getData', "navigation", 2);
+
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+        });
+    }
+
+    function deleteSug(id){
+        var data = {
+            id: id
+        };
+
+        notie.confirm('你确定删除该条意见吗?', '确认', '取消', function() {
+            design.post("/Admin/removeSuggestion", data, function(res) {
+                notie.alert(1, '删除成功！', 2);
+                if ($("#tablelist tr").length <= 1) {
+                    if (now > 1) {
+                        getData(now-1);
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    getData(now);
+                }
+            }, function(res) {
+                notie.alert(3, err.message, 2.5);
+            });
+        });
+    }
+
+    // 查找
+    function searchMsg() {
+        $(".list").html("");
+        var mail = $(".search-input").val();
+
+        var data = {
+            mail: mail
+        };
+
+        design.post('/Admin/searchSuggestion', data, function (res) {
+            $("#navigation").html("");
+            notie.alert(1, res.message, 2.5);
+            var tableTpl = Handlebars.compile($("#table-template").html());
+            $(".list").html(tableTpl(res.dataList));
+
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+            $(".list").html("未查询到");
+        });
+
+    }
+
+</script>
+</body>
+</html>

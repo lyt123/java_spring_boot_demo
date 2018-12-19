@@ -1,0 +1,155 @@
+<div id="sidebar-nav">
+    <ul id="dashboard-menu">
+        <li>
+            <a href="showAllUser.html">
+                <i class="icon-group"></i>
+                <span>查询所有用户信息</span>
+            </a>
+        </li>
+        <li>
+            <a href="suggestion.html">
+                <i class="icon-envelope"></i>
+                <span>意见反馈管理</span>
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-toggle" href="#" id="company">
+                <i class="icon-sitemap"></i>
+                <span>公司管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu company">
+                <li><a href="saveCompany.html">录入公司信息</a></li>
+                <li><a href="companyInfo.html">公司信息操作</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="dropdown-toggle" href="#" id="adviser">
+                <i class="icon-user-md"></i>
+                <span>顾问管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu adviser">
+                <li><a href="addAdviser.html">添加顾问信息</a></li>
+                <li><a href="adviserInfo.html">顾问信息操作</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="dropdown-toggle" href="#" id="designAdvice">
+                <i class="icon-hdd"></i>
+                <span>设计资讯管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu designAdvice">
+                <li><a href="addDesignAdvice.html">添加设计资讯</a></li>
+                <li><a href="designAdvice.html">设计资讯操作</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="dropdown-toggle" href="#" id="designMission">
+                <i class="icon-globe"></i>
+                <span>设计任务管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu designMission">
+                <li><a href="addDesignMission.html">添加设计任务</a></li>
+                <li><a href="designMission.html">设计任务操作</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="dropdown-toggle" href="#" id="designPerson">
+                <i class="icon-bookmark"></i>
+                <span>设计人才管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu designPerson">
+                <li><a href="addDesignPerson.html">添加设计人才</a></li>
+                <li><a href="designPerson.html">设计人才操作</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="dropdown-toggle" href="#" id="advertisement">
+                <i class="icon-desktop"></i>
+                <span>广告管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu advertisement">
+                <li><a href="addAdvertisement.html">添加广告</a></li>
+                <li><a href="advertisement.html">广告操作</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="importExcel.html">
+                <i class="icon-cloud-upload"></i>
+                <span>导入公司excel表</span>
+            </a>
+        </li>
+        <li>
+            <a href="contactAbout.html">
+                <i class="icon-tag"></i>
+                <span>关于-联系我们</span>
+            </a>
+        </li>
+        <li>
+            <a href="uploadApk.html">
+                <i class="icon-cloud-upload"></i>
+                <span>App版本更新</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<script src="js/theme.js"></script>
+<script>
+    $(function () {
+        var arr = window.location.pathname.match(/\/(\w+).html?/);
+        var arrow = '<div class="pointer"><div class="arrow"></div><div class="arrow_border"></div></div>';
+        switch (arr[0]) {
+            case '/showAllUser.html':
+                $("a[href='showAllUser.html']").before(arrow).parent('li').addClass('active');
+                break;
+            case '/suggestion.html':
+                $("a[href='suggestion.html']").before(arrow).parent('li').addClass('active');
+                break;
+            case '/saveCompany.html':
+            case '/companyInfo.html':
+                $("#company").before(arrow).parent('li').addClass('active');
+                $(".company").addClass('active');
+                break;
+            case '/addDesignAdvice.html':
+            case '/designAdvice.html':
+                $("#designAdvice").before(arrow).parent('li').addClass('active');
+                $(".designAdvice").addClass('active');
+                break;
+            case '/addDesignMission.html':
+            case '/designMission.html':
+                $("#designMission").before(arrow).parent('li').addClass('active');
+                $(".designMission").addClass('active');
+                break;
+            case '/addDesignPerson.html':
+            case '/designPerson.html':
+                $("#designPerson").before(arrow).parent('li').addClass('active');
+                $(".designPerson").addClass('active');
+                break;
+            case '/addAdvertisement.html':
+            case '/advertisement.html':
+                $("#advertisement").before(arrow).parent('li').addClass('active');
+                $(".advertisement").addClass('active');
+                break;
+            case '/addAdviser.html':
+            case '/adviserInfo.html':
+                $("#adviser").before(arrow).parent('li').addClass('active');
+                $(".adviser").addClass('active');
+                break;
+            case '/importExcel.html':
+                $("a[href='importExcel.html']").before(arrow).parent('li').addClass('active');
+                break;
+            case '/contactAbout.html':
+                $("a[href='contactAbout.html']").before(arrow).parent('li').addClass('active');
+                break;
+            case '/uploadApk.html':
+                $("a[href='uploadApk.html']").before(arrow).parent('li').addClass('active');
+                break
+
+        }
+    });
+</script>

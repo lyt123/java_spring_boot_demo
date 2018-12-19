@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>所有用户信息管理</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit">
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-responsive.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet"/>
+    <link href="css/lib/font-awesome.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/layout.css"/>
+    <link rel="stylesheet" href="css/compiled/common.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+
+<div id="header">
+    <!--插入导航-->
+</div>
+
+<div id="sideLeft">
+    <!--左边栏菜单-->
+</div>
+
+
+<!-- main container -->
+<div class="content">
+
+    <div class="title">
+        <span>用户列表</span>
+        <div class="search">
+            <input type="text" class="search-input" placeholder="请输入用户账号查询" onkeyup="if (event.keyCode == 13) { searchUser(); return false; }">
+            <i class="icon-search search-icon" onclick="searchUser()"></i>
+        </div>
+    </div>
+
+    <div class="list">
+
+    </div>
+    <div id="navigation">
+
+    </div>
+</div>
+
+<div class="modal fade" id="roleChange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">修改角色权限</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="" enctype="multipart/form-data">
+                    <input type="text" style="display: none" id="userId">
+                    <div class="form-group">
+                        <label for="" class="col-sm-3 control-label">请选择权限：</label>
+                        <div class="col-sm-8">
+                            <select name="" id="slectUser" style="height: 36px;">
+                                <option value="1">普通用户</option>
+                                <option value="2">VIP用户</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <p class="error-info"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="changeClose" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="modify">提交</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- scripts -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/notie.js"></script>
+<script src="js/handlebars.min.js"></script>
+<script src="js/navigation.js"></script>
+
+<script type="text/x-handlebars-template" id="table-template">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>账号</th>
+            <th>角色</th>
+            <th>注册时间</th>
+            <th>升级为VIP</th>
+        </tr>
+        </thead>
+        <tbody id="tablelist">
+        {{#each this}}
+        {{#compare role}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{phone}}</td>
+            <td>
+                {{roleFilter role}}
+            </td>
+            <td>
+                {{timeFilter registerDate}}
+            </td>
+            <td>
+                <button class="btn btn-info" data-toggle="modal" onclick="showSelect({{role}},{{id}})" data-target="#roleChange">修改权限</button>
+            </td>
+        </tr>
+        {{else}}
+        {{/compare}}
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/javascript">
+    var now = 1;
+    window.onload = function () {
+
+        $("#header").load('header.html');
+
+        $("#sideLeft").load('side.html');
+
+        getData(now);
+
+    };
+
+    function getData(page) {
+        now = page;
+        var limit = 10;
+        var data = {
+            pageNo: page,
+            pageSize: limit
+        };
+        design.post('/Admin/showAllUser', data, function (res) {
+
+
+            var total_page = Math.ceil(res.data / limit);
+
+            design.log(total_page);
+
+            Handlebars.registerHelper("compare", function (value, options) {
+                if (value == '3') {
+                    return options.inverse(this);
+                } else {
+                    return options.fn(this);
+                }
+            });
+            Handlebars.registerHelper("roleFilter", function (value, options) {
+                if (value == '1') {
+                    return '普通用户';
+                } else if (value == '2') {
+                    return 'VIP';
+                }
+            });
+
+            Handlebars.registerHelper("timeFilter", function (value, options) {
+                var time = new Date(value);
+                return formatDate(time, "yyyy-MM-dd hh:mm:ss");
+            });
+
+            var tableTpl = Handlebars.compile($("#table-template").html());
+
+
+            design.log(res.dataList);
+
+            $(".list").html(tableTpl(res.dataList));
+
+            makeNavigation(page, total_page, 'getData', "navigation", 2);
+
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+        });
+    }
+
+    function showSelect(role, id) {
+        $("#slectUser").val(role);
+        $("#userId").val(id);
+    }
+    $("#modify").on("click", function () {
+        var method = $("#slectUser").val();
+        var url;
+        if (method == 1) {
+            url = "/Admin/downToUser";
+        } else {
+            url = "/Admin/upToVip";
+        }
+        var data = {
+            user_id: $("#userId").val()
+        };
+        design.post(url, data, function (res) {
+            $("#changeClose").trigger("click");
+            notie.alert(1, res.message, 2.5);
+            getData(now);
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+        });
+    });
+
+    // 查找用户
+    function searchUser() {
+        $(".list").html("");
+        var phone = $(".search-input").val();
+
+        var data = {
+            phone: phone
+        };
+
+        design.post('/Admin/searchUserByPhone', data, function (res) {
+            $("#navigation").html("");
+            notie.alert(1, res.message, 2.5);
+            var tableTpl = Handlebars.compile($("#table-template").html());
+            $(".list").html(tableTpl(res.dataList));
+
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+            $(".list").html("未查询到");
+        });
+
+    }
+</script>
+</body>
+</html>

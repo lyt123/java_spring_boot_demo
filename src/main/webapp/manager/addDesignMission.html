@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>添加设计任务</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit">
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet"/>
+    <link href="css/lib/font-awesome.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/layout.css"/>
+    <link rel="stylesheet" href="css/compiled/common.css" type="text/css"/>
+    <link rel="stylesheet" href="css/form.css">
+</head>
+<body>
+
+<div id="header">
+    <!--插入导航-->
+</div>
+<div id="sideLeft">
+    <!--左边栏菜单-->
+
+</div>
+
+
+<!-- main container -->
+<div class="content">
+
+    <div class="title">
+        <span>添加设计任务（全为必填数据）</span>
+    </div>
+
+    <div class="one-level addBox">
+        <form class="form-horizontal" name="uploadForm" id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title" class="col-sm-3 control-label">请输入标题：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="title" id="title" placeholder="请输入标题">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="issuer" class="col-sm-3 control-label">请输入发布者：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="issuer" id="issuer" placeholder="请输入发布者">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="contact" class="col-sm-3 control-label">请输入联系方式：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="contact" id="contact" placeholder="请输入联系方式">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="details" class="col-sm-3 control-label">请输入详情：</label>
+                <div class="col-sm-9">
+                    <textarea id="details" rows="10" style="width:400px" name="details"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="pic-file" class="col-sm-3 control-label">请选择任务封面：</label>
+                <div class="col-sm-9 clearfix">
+                    <div id="preview" style="float:left"></div>
+                    <input type="file" onchange="preview(this)" id="pic-file" name="cover"/>
+                    <div style="margin-top:20px;float: right;margin-right:20px;font-size: 16px;color: red;">
+                        请上传大小为小于1M的图片<br/>
+                        当前图片宽度为<span class="file-width"></span><br/>
+                        当前图片高度为<span class="file-height"></span><br/>
+                        当前文件大小为<span class="file-size"></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <button id="submitForm" type="button">立即提交</button>
+    </div>
+    <div class="fix-load" style="display: none;">
+        <div class="spinner">
+            <div class="rect1"></div>
+            <div class="rect2"></div>
+            <div class="rect3"></div>
+            <div class="rect4"></div>
+            <div class="rect5"></div>
+        </div>
+        <div class="warning">
+            提交中
+        </div>
+    </div>
+</div>
+
+
+<!-- scripts -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/notie.js"></script>
+<script src="js/handlebars.min.js"></script>
+<script src="js/ajaxfileupload.js"></script>
+<script>
+    $(function () {
+        $("#header").load('header.html');
+
+        $("#sideLeft").load('side.html');
+
+        $("#submitForm").click(function () {
+
+            if (!$("#title").val() || !$("#details").val() || !$("#issuer").val() || !$("#contact").val()) {
+                notie.alert(3, "请完善信息", 2.5);
+                return false;
+            }
+
+            uploadFile("/Admin/addDesignMission");
+
+        });
+
+    });
+</script>
+</body>
+</html>

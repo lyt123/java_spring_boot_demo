@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="login-bg">
+<head>
+	<title>后台管理系统登录入口</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit">
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="css/lib/font-awesome.css" />
+    <link rel="stylesheet" href="css/compiled/signin.css" type="text/css" media="screen" />
+</head>
+<body onkeydown="keyLogin()">
+
+    <div class="row-fluid login-wrapper">
+
+        <div class="logo"></div>
+
+        <div class="span4 box">
+
+            <div class="content-wrap">
+
+                <h6>管理员登录</h6>
+
+                <input class="account" value="admin" type="text" placeholder="输入您的账号" />
+
+                <input class="password" value="" type="password" placeholder="输入您的密码" />
+
+                <p class="error-info"></p>
+
+                <a class="btn-glow primary login" href="javascript:void(0)"><button style="width:90%;margin:auto;line-height:18px;padding:6px 0px" class="btn btn-info">登录</button></a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+<!-- scripts -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/notie.js"></script>
+<script type="text/javascript">
+
+    $(".login").click(function() {
+
+        var pho = $(".account").val();
+
+        var pwd = $(".password").val();
+
+        design.login('/Admin/login', {
+
+            phone: pho,
+            password: pwd
+
+        }, function(res) {
+            $.cookie("phone",pho,{
+                path:"/"
+            });
+            design.log(res);
+
+            window.location.href = "showAllUser.html";
+
+        }, function(err) {
+
+            notie.alert(3, err.message, 2.5);
+            design.log(err);
+
+
+        });
+    });
+
+    function keyLogin() {
+
+        if(event.keyCode == 13) {
+
+            $(".login").click();
+            
+        }
+
+    }
+
+</script>
+</html>

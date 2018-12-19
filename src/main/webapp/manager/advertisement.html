@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>广告操作</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="renderer" content="webkit">
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-responsive.css" rel="stylesheet"/>
+    <link href="css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet"/>
+    <link href="css/lib/font-awesome.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/layout.css"/>
+    <link rel="stylesheet" href="css/compiled/common.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/navigation.css">
+</head>
+<body>
+
+<div id="header">
+    <!--插入导航-->
+</div>
+
+<div id="sideLeft">
+    <!--左边栏菜单-->
+</div>
+
+
+<!-- main container -->
+<div class="content">
+
+    <div class="title">
+        <span>广告列表</span>
+    </div>
+
+    <div class="list">
+
+    </div>
+    <div id="navigation">
+
+    </div>
+</div>
+<div class="modal fade" id="changeMess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="AdvertisementClose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">广告修改</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group" style="display: none;">
+                        <label for="advertisement_id" class="col-sm-3 control-label">id：</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="advertisement_id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="issuer" class="col-sm-3 control-label">发布单位：</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="issuer">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="link" class="col-sm-3 control-label">连接：</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="link">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact" class="col-sm-3 control-label">联系方式：</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="contact">
+                        </div>
+                    </div>
+                </form>
+                <div class="footbtn">
+                    <button id="addbtn" onclick="modifyInfo()">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- scripts -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/notie.js"></script>
+<script src="js/handlebars.min.js"></script>
+<script src="js/navigation.js"></script>
+
+<script type="text/x-handlebars-template" id="table-template">
+    <table class="table table-bordered" style="table-layout:fixed;word-wrap:break-word;">
+        <thead>
+        <tr>
+            <th>发布单位</th>
+            <th>联系方式</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="tablelist">
+        {{#each this}}
+        <tr>
+            <td><a href="{{link}}" target="_blank">{{issuer}}</a></td>
+            <td>
+                {{contact}}
+            </td>
+            <td>
+                <button class="btn btn-default" onclick="modifyMsg({{id}},'{{stringFilter issuer}}','{{link}}','{{stringFilter contact}}')"
+                        data-toggle="modal" data-target="#changeMess">修改
+                </button>
+                <button class="btn btn-danger" onclick="deleteMsg('{{id}}')">删除</button>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/javascript">
+    var now = 1;
+    window.onload = function () {
+
+        $("#header").load('header.html');
+
+        $("#sideLeft").load('side.html');
+
+        getData(now);
+
+    };
+
+    function getData(page) {
+        now = page;
+        var limit = 10;
+        var data = {
+            pageNo: page,
+            pageSize: limit
+        };
+        design.post('/Home/Advertisement/showAdvertisement', data, function (res) {
+
+
+            var total_page = Math.ceil(res.data / limit);
+
+
+            var tableTpl = Handlebars.compile($("#table-template").html());
+
+            Handlebars.registerHelper("stringFilter", function (value, options) {
+                if (!value) {
+                    return encodeURI(value);
+                }
+                var value = value.replace(/\"/g,'\\"').replace(/\'/g,"\\'");
+                return encodeURI(value);
+            });
+
+
+            $(".list").html(tableTpl(res.dataList));
+            makeNavigation(page, total_page, 'getData', "navigation", 2);
+
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+        });
+    }
+
+    function deleteMsg(advertisement_id) {
+        var data = {
+            advertisement_id: advertisement_id
+        };
+        notie.confirm('你确定删除该广告吗?', '确认', '取消', function () {
+            design.post("/Admin/removeAdvertisement", data, function (res) {
+                notie.alert(1, '删除成功！', 2);
+                if ($("#tablelist tr").length <= 1) {
+                    if (now > 1) {
+                        getData(now-1);
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    getData(now);
+                }
+            }, function (err) {
+                notie.alert(3, err.message, 2.5);
+            });
+        });
+    }
+
+    function modifyMsg(id, issuer, link, contact) {
+
+        issuer = decodeURI(issuer);
+        contact = decodeURI(contact);
+
+
+        $("#advertisement_id").val(id);
+        $("#issuer").val(issuer);
+        $("#link").val(link);
+        $("#contact").val(contact);
+    }
+    
+    function modifyInfo() {
+        var data = {
+            advertisement_id: $("#advertisement_id").val(),
+            issuer: $("#issuer").val(),
+            contact: $("#contact").val(),
+            link: $("#link").val()
+        };
+        design.post("/Admin/modifyAdvertisement", data, function (res) {
+            notie.alert(1, '修改成功！', 2);
+            $("#AdvertisementClose").trigger("click");
+            getData(now);
+        }, function (err) {
+            notie.alert(3, err.message, 2.5);
+        });
+    }
+</script>
+</body>
+</html>
