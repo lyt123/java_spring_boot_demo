@@ -24,8 +24,8 @@ public class UsersController {
 
     @RequestMapping("/show")
     public String showInfo(){
-        String str = null;
-        str.length();
+//        String str = null;
+//        str.length();
         return "index";
     }
     @RequestMapping("/show2")
